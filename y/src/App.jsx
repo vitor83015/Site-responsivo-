@@ -74,7 +74,6 @@ function App() {
           </div>
         )}
       </div>
-
       <div className="anotacoes">
         <h2>Anotações</h2>
         {Object.keys(notas).map((aula) => (

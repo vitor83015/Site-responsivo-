@@ -76,11 +76,10 @@ input, select, button {
   margin: 5px;
 }
 
-.icones-calorias {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 10px;
+.icones-calorias span {
+  color: #ff0000;
+  font-size: 30px;
+  margin: 0 5px;
 }
 
 .icone {
