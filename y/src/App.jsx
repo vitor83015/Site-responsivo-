@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFire, faRunning, faDumbbell, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import './App.css';
+import './index.css';
 
 function App() {
   const [peso, setPeso] = useState('');
@@ -11,6 +11,8 @@ function App() {
   const [calorias, setCalorias] = useState(null);
   const [notas, setNotas] = useState({ aula1: '' });
   const [notaAberta, setNotaAberta] = useState(null);
+  const [mensagem, setMensagem] = useState('');
+  const [calculoEmAndamento, setCalculoEmAndamento] = useState(false);
 
   useEffect(() => {
     const notasSalvas = JSON.parse(localStorage.getItem('notas'));
@@ -24,13 +26,28 @@ function App() {
   }, [notas]);
 
   const calcularCalorias = () => {
+    setCalculoEmAndamento(true); // Começa o spinner
     let tdee = 0;
     if (peso && altura && idade) {
       tdee = 66.5 + (13.75 * peso) + (5.003 * altura) - (6.755 * idade);
       tdee *= parseFloat(atividade);
-      setCalorias(tdee);
+      setTimeout(() => {
+        setCalorias(tdee);
+        setCalculoEmAndamento(false); // Fim do cálculo, remove o spinner
+      }, 2000); // Simula o tempo do cálculo
     } else {
       setCalorias(null);
+      setCalculoEmAndamento(false); // Se faltou algum dado, remove o spinner
+    }
+  };
+
+  const handleClickIcone = (tipo) => {
+    if (tipo === "corrida") {
+      setMensagem("1 hora de corrida = 700 calorias em média");
+    } else if (tipo === "musculacao") {
+      setMensagem("1 hora de musculação = 450 calorias em média");
+    } else {
+      setMensagem("");
     }
   };
 
@@ -48,6 +65,13 @@ function App() {
   return (
     <div className="App">
       <h1>Cálculo de Calorias Diárias</h1>
+      
+      <div className="icones-calorias">
+        <FontAwesomeIcon icon={faDumbbell} className="icone" title="Musculação" onClick={() => handleClickIcone('musculacao')} />
+        <FontAwesomeIcon icon={faRunning} className="icone" title="Corrida" onClick={() => handleClickIcone('corrida')} />
+        <FontAwesomeIcon icon={faFire} className="icone" title="Fogo" />
+      </div>
+
       <div className="calculo-metabolismo">
         <div className="inputs">
           <input type="number" placeholder="Peso (kg)" value={peso} onChange={(e) => setPeso(e.target.value)} />
@@ -63,38 +87,42 @@ function App() {
           <button onClick={calcularCalorias}>Calcular</button>
         </div>
 
-        {calorias !== null && (
-          <div className="resultado-calorias">
-            <p>Calorias queimadas por dia: {calorias.toFixed(2)}</p>
-            <div className="icones-calorias">
-              <FontAwesomeIcon icon={faDumbbell} className="icone" title="Musculação" />
-              <FontAwesomeIcon icon={faFire} className="icone" title="Fogo" />
-              <FontAwesomeIcon icon={faRunning} className="icone" title="Corrida" />
+        {calculoEmAndamento ? (
+          <div className="spinner"></div>
+        ) : (
+          calorias !== null && (
+            <div className="resultado-calorias">
+              <p>Calorias queimadas por dia: {calorias.toFixed(2)}</p>
             </div>
-          </div>
+          )
         )}
       </div>
+
+      {mensagem && <p>{mensagem}</p>}
+
       <div className="anotacoes">
         <h2>Anotações</h2>
-        {Object.keys(notas).map((aula) => (
-          <div key={aula} className="nota">
-            <button onClick={() => setNotaAberta(notaAberta === aula ? null : aula)}>{aula.toUpperCase()}</button>
-            {notaAberta === aula && (
-              <div>
-                <textarea
-                  value={notas[aula]}
-                  onChange={(e) => setNotas({ ...notas, [aula]: e.target.value })}
-                  placeholder={`Anotações sobre ${aula}`}
-                />
-                {aula !== 'aula1' && (
-                  <button onClick={() => removerAula(aula)} className="delete-button">
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        ))}
+        <div className="notas-container">
+          {Object.keys(notas).map((aula) => (
+            <div key={aula} className="nota">
+              <button onClick={() => setNotaAberta(notaAberta === aula ? null : aula)}>{aula.toUpperCase()}</button>
+              {notaAberta === aula && (
+                <div className="popup">
+                  <textarea
+                    value={notas[aula]}
+                    onChange={(e) => setNotas({ ...notas, [aula]: e.target.value })}
+                    placeholder={`Anotações sobre ${aula}`}
+                  />
+                  {aula !== 'aula1' && (
+                    <button onClick={() => removerAula(aula)} className="delete-button">
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
         <button onClick={adicionarAula} className="add-button">
           <FontAwesomeIcon icon={faPlus} /> Adicionar Aula
         </button>
