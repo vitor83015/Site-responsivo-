@@ -84,10 +84,9 @@ input, select, button {
 }
 
 .icone {
+  display: inline-block !important;
   font-size: 30px;
-  color: #FF5733; /* Cor do ícone - você pode mudar conforme o gosto */
-  cursor: pointer;
-  transition: color 0.3s;
+  color: #FF5733;
 }
 
 .icone:hover {

@@ -67,9 +67,9 @@ function App() {
           <div className="resultado-calorias">
             <p>Calorias queimadas por dia: {calorias.toFixed(2)}</p>
             <div className="icones-calorias">
-              <FontAwesomeIcon icon={faFire} className="icone" />
-              <FontAwesomeIcon icon={faRunning} className="icone" />
-              <FontAwesomeIcon icon={faDumbbell} className="icone" />
+              <FontAwesomeIcon icon={faDumbbell} className="icone" title="Musculação" />
+              <FontAwesomeIcon icon={faFire} className="icone" title="Fogo" />
+              <FontAwesomeIcon icon={faRunning} className="icone" title="Corrida" />
             </div>
           </div>
         )}
