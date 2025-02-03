@@ -97,7 +97,7 @@ input, select, button {
 }
 
 .anotacoes {
-  margin-top: 20px;
+
 }
 
 textarea {
@@ -141,6 +141,28 @@ button.delete-button {
 button.delete-button:hover {
   background-color: darkred;
 }
+
+.configuracoes {
+  margin-bottom: 20px;
+}
+
+.configuracoes label {
+  font-size: 1rem;
+  margin-right: 10px;
+}
+
+.configuracoes input {
+  width: 50px;
+  text-align: center;
+}
+
+.notas-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
 
 @media (max-width: 768px) {
   .inputs input,

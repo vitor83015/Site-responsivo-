@@ -13,6 +13,7 @@ function App() {
   const [notaAberta, setNotaAberta] = useState(null);
   const [mensagem, setMensagem] = useState('');
   const [calculoEmAndamento, setCalculoEmAndamento] = useState(false);
+  const [aulasPorLinha, setAulasPorLinha] = useState(3); // Adicionando estado para aulas por linha
 
   useEffect(() => {
     const notasSalvas = JSON.parse(localStorage.getItem('notas'));
@@ -26,18 +27,18 @@ function App() {
   }, [notas]);
 
   const calcularCalorias = () => {
-    setCalculoEmAndamento(true); // Começa o spinner
+    setCalculoEmAndamento(true);
     let tdee = 0;
     if (peso && altura && idade) {
       tdee = 66.5 + (13.75 * peso) + (5.003 * altura) - (6.755 * idade);
       tdee *= parseFloat(atividade);
       setTimeout(() => {
         setCalorias(tdee);
-        setCalculoEmAndamento(false); // Fim do cálculo, remove o spinner
-      }, 2000); // Simula o tempo do cálculo
+        setCalculoEmAndamento(false);
+      }, 2000);
     } else {
       setCalorias(null);
-      setCalculoEmAndamento(false); // Se faltou algum dado, remove o spinner
+      setCalculoEmAndamento(false);
     }
   };
 
@@ -65,7 +66,7 @@ function App() {
   return (
     <div className="App">
       <h1>Cálculo de Calorias Diárias</h1>
-      
+
       <div className="icones-calorias">
         <FontAwesomeIcon icon={faDumbbell} className="icone" title="Musculação" onClick={() => handleClickIcone('musculacao')} />
         <FontAwesomeIcon icon={faRunning} className="icone" title="Corrida" onClick={() => handleClickIcone('corrida')} />
@@ -100,11 +101,23 @@ function App() {
 
       {mensagem && <p>{mensagem}</p>}
 
+      {/* Input para definir quantas aulas por linha */}
+      <div className="configuracoes">
+        <label>Quantas aulas por linha?</label>
+        <input
+          type="number"
+          min="1"
+          max="5"
+          value={aulasPorLinha}
+          onChange={(e) => setAulasPorLinha(Number(e.target.value))}
+        />
+      </div>
+
       <div className="anotacoes">
         <h2>Anotações</h2>
         <div className="notas-container">
           {Object.keys(notas).map((aula) => (
-            <div key={aula} className="nota">
+            <div key={aula} className="nota" style={{ flex: `1 1 calc(${100 / aulasPorLinha}% - 10px)` }}>
               <button onClick={() => setNotaAberta(notaAberta === aula ? null : aula)}>{aula.toUpperCase()}</button>
               {notaAberta === aula && (
                 <div className="popup">
